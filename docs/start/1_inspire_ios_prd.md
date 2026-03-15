@@ -106,42 +106,19 @@ inspireme.ios/
 
 ## 5. 작업 목록
 
-### Phase 0: 개발 환경 확인
+> 상세 체크리스트: [1_inspire_ios_todo.md](1_inspire_ios_todo.md)
+> 구현 상세: [1_inspire_ios_implementation.md](1_inspire_ios_implementation.md)
 
-- [ ] Xcode 설치 확인 (`xcode-select -p` 또는 `xcodebuild -version`)
-- [ ] 미설치 시: App Store에서 Xcode 설치 (최소 Xcode 16+, Swift 6 지원)
-- [ ] iOS Simulator 확인 (iPhone, iPad 시뮬레이터 다운로드)
-- [ ] Apple Developer 계정 확인 (위젯 Extension + App Group 설정에 필요)
-
-### Phase 1: 프로젝트 셋업 + 백엔드 API 수정
-
-- [ ] Xcode 프로젝트 생성 (SwiftUI App + WidgetKit Extension)
-- [ ] 멀티 플랫폼 타겟 설정 (iOS, iPadOS, macOS)
-- [ ] App Group 설정 (앱 ↔ 위젯 데이터 공유)
-- [ ] CLAUDE.md 작성
-- [ ] **(백엔드)** Widget API 응답에 `authorSlug` 필드 추가
-
-### Phase 2: 코어 구현
-
-- [ ] API 클라이언트 구현 (`/api/widget/random`, `/api/widget/quote-of-the-day`)
-- [ ] Quote/Author 모델 정의
-- [ ] TimelineProvider 구현 — "오늘의 명언" 위젯 + "랜덤 명언" 위젯 (2종)
-- [ ] 위젯 뷰 구현 (Small, Medium, Large, Lock Screen)
-- [ ] Interactive Widget — 새로고침 버튼 (Medium/Large)
-- [ ] Deep Link 처리 — 명언/저자 탭 시 Safari로 InspireMe 사이트 이동
-
-### Phase 3: 설정 & UX
-
-- [ ] 메인 앱 설정 화면 (언어 선택, 갱신 주기, 토픽 필터)
-- [ ] App Group으로 설정값 위젯과 공유
-- [ ] 오프라인 fallback (캐시된 명언 표시)
-- [ ] 위젯 미리보기 / 스냅샷
-
-### Phase 4: 배포
-
-- [ ] App Store Connect 설정
-- [ ] TestFlight 배포
-- [ ] App Store 심사 제출
+| Phase | 내용 | 주요 작업 |
+|-------|------|----------|
+| 0 | 개발 환경 확인 | Xcode 16+, Simulator, Apple Developer 계정 |
+| 1 | 백엔드 API 수정 | Widget API에 `authorSlug` 필드 추가 |
+| 2 | Xcode 프로젝트 셋업 | Swift 6, WidgetKit Extension, App Group |
+| 3 | 공유 모듈 구현 | 모델, API 클라이언트, AppGroupManager, 테마 |
+| 4 | 위젯 구현 | 2종 위젯, 4가지 크기, Deep Link, Interactive |
+| 5 | 메인 앱 구현 | 온보딩, 설정, 위젯 미리보기 |
+| 6 | 테스트 & QA | 멀티 플랫폼, StandBy, 오프라인, 다크 모드 |
+| 7 | 배포 | App Store Connect, TestFlight, 심사 제출 |
 
 ## 6. 결정 사항
 
