@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InspireMe 위젯 UI 목업</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #1a1a2e;
+    color: #fff;
+    padding: 40px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  h1 span { color: #a78bfa; }
+
+  .subtitle {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 14px;
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .badge {
+    font-size: 11px;
+    background: #a78bfa33;
+    color: #a78bfa;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .platform-section {
+    margin-bottom: 56px;
+  }
+
+  .widgets-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .widget-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .widget-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  /* ── Common Widget Styles ── */
+  .widget {
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .widget:hover { transform: scale(1.02); }
+
+  /* ── Style A: Gradient ── */
+  .style-gradient {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%);
+  }
+
+  /* ── Style B: Dark Elegant ── */
+  .style-dark {
+    background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+    border: 1px solid #334155;
+  }
+
+  /* ── Style C: Warm ── */
+  .style-warm {
+    background: linear-gradient(135deg, #451a03 0%, #78350f 50%, #92400e 100%);
+  }
+
+  /* ── Style D: Nature ── */
+  .style-nature {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  }
+
+  /* ── Style E: Light ── */
+  .style-light {
+    background: #ffffff;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+  }
+
+  .style-light .quote-text { color: #1e293b; }
+  .style-light .author-name { color: #6366f1; }
+  .style-light .author-label { color: #64748b; }
+  .style-light .topic-tag { background: #f1f5f9; color: #475569; }
+  .style-light .divider { background: #e2e8f0; }
+  .style-light .tap-hint { color: #94a3b8; }
+  .style-light .refresh-btn { color: #94a3b8; border-color: #e2e8f0; }
+
+  /* ── Small Widget (170×170) ── */
+  .widget-small {
+    width: 170px;
+    height: 170px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .widget-small .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #f1f5f9;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .widget-small .author-area {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .widget-small .author-name {
+    font-size: 11px;
+    color: #c4b5fd;
+    font-weight: 500;
+  }
+
+  .widget-small .quote-icon {
+    font-size: 20px;
+    color: #a78bfa44;
+    position: absolute;
+    top: 12px;
+    right: 14px;
+  }
+
+  /* ── Medium Widget (364×170) ── */
+  .widget-medium {
+    width: 364px;
+    height: 170px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .widget-medium .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #f1f5f9;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .widget-medium .bottom-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .widget-medium .author-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .widget-medium .author-name {
+    font-size: 13px;
+    color: #c4b5fd;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: #c4b5fd44;
+    text-underline-offset: 2px;
+  }
+
+  .widget-medium .divider {
+    width: 1px;
+    height: 12px;
+    background: #475569;
+  }
+
+  .widget-medium .tap-hint {
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  .widget-medium .refresh-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 12px;
+  }
+
+  .widget-medium .quote-icon {
+    font-size: 24px;
+    color: #a78bfa33;
+    position: absolute;
+    top: 14px;
+    right: 18px;
+  }
+
+  /* ── Large Widget (364×382) ── */
+  .widget-large {
+    width: 364px;
+    height: 382px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .widget-large .top-label {
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .widget-large .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #f1f5f9;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+  }
+
+  .widget-large .meta-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .widget-large .divider {
+    height: 1px;
+    background: #334155;
+  }
+
+  .widget-large .author-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .widget-large .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .widget-large .author-label {
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  .widget-large .author-name {
+    font-size: 14px;
+    color: #c4b5fd;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: #c4b5fd44;
+    text-underline-offset: 2px;
+  }
+
+  .widget-large .topics {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .topic-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: #ffffff12;
+    color: #a78bfa;
+    font-weight: 500;
+  }
+
+  .widget-large .quote-icon {
+    font-size: 32px;
+    color: #a78bfa22;
+    position: absolute;
+    top: 16px;
+    right: 20px;
+  }
+
+  /* ── Lock Screen Widget ── */
+  .widget-lockscreen {
+    width: 170px;
+    height: 76px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+  }
+
+  .widget-lockscreen .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #fff;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .widget-lockscreen .author-name {
+    font-size: 9px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+  }
+
+  /* ── Lock Screen Circular ── */
+  .widget-lockscreen-circular {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 24px;
+    color: #fff;
+  }
+
+  /* ── Lock Screen Inline ── */
+  .widget-lockscreen-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    height: 28px;
+  }
+
+  .widget-lockscreen-inline .icon {
+    font-size: 12px;
+  }
+
+  .widget-lockscreen-inline .text {
+    font-size: 11px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  /* ── macOS Desktop Widget ── */
+  .mac-widget {
+    border-radius: 18px;
+    backdrop-filter: blur(40px);
+  }
+
+  /* ── Tap Indicator ── */
+  .tap-area {
+    position: relative;
+  }
+
+  .tap-area::after {
+    content: '↗';
+    font-size: 9px;
+    color: #a78bfa;
+    margin-left: 3px;
+    opacity: 0.6;
+  }
+
+  /* ── Interactive Widget Buttons ── */
+  .interactive-btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  .int-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background: transparent;
+  }
+
+  /* ── StandBy Mode ── */
+  .standby-container {
+    background: #000;
+    border-radius: 16px;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 420px;
+    height: 200px;
+    border: 1px solid #222;
+  }
+
+  .standby-container .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    line-height: 1.7;
+    color: #e2e8f0;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .standby-container .author-name {
+    font-size: 14px;
+    color: #f59e0b;
+    font-weight: 500;
+  }
+
+  /* ── App Settings Mockup ── */
+  .app-screen {
+    width: 320px;
+    background: #f8fafc;
+    border-radius: 32px;
+    overflow: hidden;
+    border: 4px solid #1e293b;
+  }
+
+  .app-header {
+    background: #fff;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .app-header .title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .settings-group {
+    padding: 16px 20px;
+  }
+
+  .settings-group-title {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .settings-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .settings-item {
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .settings-item:last-child { border: none; }
+
+  .settings-item .label {
+    font-size: 14px;
+    color: #1e293b;
+  }
+
+  .settings-item .value {
+    font-size: 14px;
+    color: #6366f1;
+    font-weight: 500;
+  }
+
+  .toggle {
+    width: 44px;
+    height: 26px;
+    border-radius: 13px;
+    background: #6366f1;
+    position: relative;
+  }
+
+  .toggle::after {
+    content: '';
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+
+  .toggle.off {
+    background: #d1d5db;
+  }
+
+  .toggle.off::after {
+    right: auto;
+    left: 2px;
+  }
+
+  .preview-widget {
+    margin: 16px 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #312e81, #4c1d95);
+    border-radius: 18px;
+    text-align: center;
+  }
+
+  .preview-widget .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+  }
+
+  .preview-widget .author-name {
+    font-size: 12px;
+    color: #c4b5fd;
+  }
+
+  /* ── Annotation ── */
+  .annotation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: #1e293b;
+    border-radius: 8px;
+    border-left: 3px solid #a78bfa;
+    max-width: 500px;
+  }
+
+  .annotation .text {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .annotation .text strong {
+    color: #c4b5fd;
+  }
+
+  /* ── Layout ── */
+  .two-col {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .note-box {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    max-width: 600px;
+  }
+
+  .note-box .note-title {
+    font-size: 12px;
+    color: #a78bfa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .note-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .note-box li {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.6;
+    padding: 2px 0;
+  }
+
+  .note-box li::before {
+    content: '→ ';
+    color: #6366f1;
+  }
+</style>
+</head>
+<body>
+
+<h1>Inspire<span>Me</span> iOS 위젯 UI 목업</h1>
+<p class="subtitle">iPhone · iPad · Mac — 명언 위젯 디자인 시안</p>
+
+<!-- ─── iPhone 위젯 ─── -->
+<div class="platform-section">
+  <div class="section-title">
+    iPhone 홈 화면 위젯
+    <span class="badge">iOS 17+</span>
+  </div>
+
+  <div class="widgets-row">
+    <!-- Small -->
+    <div class="widget-wrapper">
+      <div class="widget-label">Small (170×170)</div>
+      <div class="widget widget-small style-gradient">
+        <div class="quote-icon">❝</div>
+        <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name tap-area">키케로</span>
+        </div>
+      </div>
+      <div class="annotation">
+        <div class="text">위젯 전체 탭 → <strong>/quotes/{id}</strong> 이동</div>
+      </div>
+    </div>
+
+    <!-- Medium -->
+    <div class="widget-wrapper">
+      <div class="widget-label">Medium (364×170)</div>
+      <div class="widget widget-medium style-dark">
+        <div class="quote-icon">❝</div>
+        <div class="quote-text">작은 기회로부터 종종 위대한 업적이 시작된다. 기회는 준비된 자에게 찾아온다.</div>
+        <div class="bottom-area">
+          <div class="author-area">
+            <span class="author-name tap-area">데모스테네스</span>
+            <div class="divider"></div>
+            <span class="tap-hint">명언 탭 → 상세 페이지</span>
+          </div>
+          <div class="refresh-btn">↻</div>
+        </div>
+      </div>
+      <div class="annotation">
+        <div class="text"><strong>명언 영역</strong> 탭 → /quotes/{id}<br><strong>저자 이름</strong> 탭 → /authors/{slug}</div>
+      </div>
+    </div>
+
+    <!-- Large -->
+    <div class="widget-wrapper">
+      <div class="widget-label">Large (364×382)</div>
+      <div class="widget widget-large style-gradient">
+        <div class="quote-icon">❝</div>
+        <div>
+          <div class="top-label">오늘의 명언</div>
+        </div>
+        <div class="quote-text">
+          행복은 습관이다.<br>그것을 몸에 지니라.<br><br>허버트
+        </div>
+        <div class="meta-area">
+          <div class="topics">
+            <span class="topic-tag">행복</span>
+            <span class="topic-tag">삶</span>
+            <span class="topic-tag">습관</span>
+          </div>
+          <div class="divider"></div>
+          <div class="author-row">
+            <div class="author-info">
+              <span class="author-label">저자</span>
+              <span class="author-name tap-area">허버트</span>
+            </div>
+            <div class="interactive-btns">
+              <div class="int-btn">♡</div>
+              <div class="int-btn">↻</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation">
+        <div class="text">Large 위젯 — 토픽 태그, <strong>Interactive 버튼</strong> (좋아요/새로고침) 포함</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 잠금 화면 위젯 ─── -->
+<div class="platform-section">
+  <div class="section-title">
+    iPhone 잠금 화면 위젯
+    <span class="badge">Lock Screen</span>
+  </div>
+
+  <div class="widgets-row">
+    <div class="widget-wrapper">
+      <div class="widget-label">Rectangular</div>
+      <div class="widget-lockscreen">
+        <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+        <div class="author-name">— 키케로</div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Circular</div>
+      <div class="widget-lockscreen-circular">❝</div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Inline</div>
+      <div class="widget-lockscreen-inline">
+        <span class="icon">❝</span>
+        <span class="text">삶이 있는 한 희망은 있다. — 키케로</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── StandBy 모드 ─── -->
+<div class="platform-section">
+  <div class="section-title">
+    iPhone StandBy 모드
+    <span class="badge">iOS 17+</span>
+  </div>
+
+  <div class="widgets-row">
+    <div class="widget-wrapper">
+      <div class="widget-label">StandBy / 충전 중</div>
+      <div class="standby-container">
+        <div class="quote-text">작은 기회로부터 종종<br>위대한 업적이 시작된다.</div>
+        <div class="author-name">— 데모스테네스</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Mac 위젯 ─── -->
+<div class="platform-section">
+  <div class="section-title">
+    macOS 데스크탑 위젯
+    <span class="badge">macOS 14+</span>
+  </div>
+
+  <div class="widgets-row">
+    <div class="widget-wrapper">
+      <div class="widget-label">Small</div>
+      <div class="widget widget-small style-light mac-widget">
+        <div class="quote-icon" style="color:#6366f122">❝</div>
+        <div class="quote-text" style="color:#1e293b">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name" style="color:#6366f1">키케로</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Medium</div>
+      <div class="widget widget-medium style-light mac-widget">
+        <div class="quote-icon" style="color:#6366f122">❝</div>
+        <div class="quote-text" style="color:#1e293b">작은 기회로부터 종종 위대한 업적이 시작된다. 기회는 준비된 자에게 찾아온다.</div>
+        <div class="bottom-area">
+          <div class="author-area">
+            <span class="author-name" style="color:#6366f1">데모스테네스</span>
+            <div class="divider" style="background:#e2e8f0"></div>
+            <span class="tap-hint" style="color:#94a3b8">클릭 → 상세 페이지</span>
+          </div>
+          <div class="refresh-btn" style="color:#94a3b8;border-color:#e2e8f0">↻</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Large</div>
+      <div class="widget widget-large style-light mac-widget" style="height:340px">
+        <div class="quote-icon" style="color:#6366f122">❝</div>
+        <div>
+          <div class="top-label" style="color:#94a3b8">오늘의 명언</div>
+        </div>
+        <div class="quote-text" style="color:#1e293b">
+          행복은 습관이다.<br>그것을 몸에 지니라.
+        </div>
+        <div class="meta-area">
+          <div class="topics">
+            <span class="topic-tag" style="background:#f1f5f9;color:#6366f1">행복</span>
+            <span class="topic-tag" style="background:#f1f5f9;color:#6366f1">삶</span>
+            <span class="topic-tag" style="background:#f1f5f9;color:#6366f1">습관</span>
+          </div>
+          <div class="divider" style="background:#e2e8f0"></div>
+          <div class="author-row">
+            <div class="author-info">
+              <span class="author-label" style="color:#94a3b8">저자</span>
+              <span class="author-name" style="color:#6366f1">허버트</span>
+            </div>
+            <div class="interactive-btns">
+              <div class="int-btn" style="border-color:#e2e8f0;color:#94a3b8">♡</div>
+              <div class="int-btn" style="border-color:#e2e8f0;color:#94a3b8">↻</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <div class="note-title">macOS 위젯 특징</div>
+    <ul>
+      <li>시스템 라이트/다크 모드에 따라 자동 전환</li>
+      <li>클릭 시 기본 브라우저에서 InspireMe 사이트 열림</li>
+      <li>Notification Center에서도 동일하게 표시</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ─── 테마 변형 ─── -->
+<div class="platform-section">
+  <div class="section-title">
+    위젯 테마 옵션
+    <span class="badge">Customizable</span>
+  </div>
+
+  <div class="widgets-row">
+    <div class="widget-wrapper">
+      <div class="widget-label">Gradient (기본)</div>
+      <div class="widget widget-small style-gradient">
+        <div class="quote-icon">❝</div>
+        <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name">키케로</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Dark Elegant</div>
+      <div class="widget widget-small style-dark">
+        <div class="quote-icon">❝</div>
+        <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name">키케로</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Warm</div>
+      <div class="widget widget-small style-warm">
+        <div class="quote-icon" style="color:#fbbf2444">❝</div>
+        <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name" style="color:#fbbf24">키케로</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Nature</div>
+      <div class="widget widget-small style-nature">
+        <div class="quote-icon" style="color:#6ee7b744">❝</div>
+        <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name" style="color:#6ee7b7">키케로</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-wrapper">
+      <div class="widget-label">Light</div>
+      <div class="widget widget-small style-light">
+        <div class="quote-icon" style="color:#6366f122">❝</div>
+        <div class="quote-text" style="color:#1e293b">삶이 있는 한 희망은 있다.</div>
+        <div class="author-area">
+          <span class="author-name" style="color:#6366f1">키케로</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 메인 앱 설정 ─── -->
+<div class="platform-section">
+  <div class="section-title">
+    메인 앱 — 설정 화면
+    <span class="badge">Companion App</span>
+  </div>
+
+  <div class="two-col">
+    <div class="widget-wrapper">
+      <div class="app-screen">
+        <div class="app-header">
+          <div class="title">InspireMe</div>
+        </div>
+
+        <div class="preview-widget">
+          <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+          <div class="author-name">— 키케로</div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">위젯 설정</div>
+          <div class="settings-card">
+            <div class="settings-item">
+              <span class="label">언어</span>
+              <span class="value">한국어 ›</span>
+            </div>
+            <div class="settings-item">
+              <span class="label">갱신 주기</span>
+              <span class="value">4시간 ›</span>
+            </div>
+            <div class="settings-item">
+              <span class="label">위젯 유형</span>
+              <span class="value">오늘의 명언 ›</span>
+            </div>
+            <div class="settings-item">
+              <span class="label">테마</span>
+              <span class="value">Gradient ›</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">토픽 필터</div>
+          <div class="settings-card">
+            <div class="settings-item">
+              <span class="label">동기부여</span>
+              <div class="toggle"></div>
+            </div>
+            <div class="settings-item">
+              <span class="label">행복</span>
+              <div class="toggle"></div>
+            </div>
+            <div class="settings-item">
+              <span class="label">사랑</span>
+              <div class="toggle off"></div>
+            </div>
+            <div class="settings-item">
+              <span class="label">성공</span>
+              <div class="toggle off"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="note-box">
+        <div class="note-title">메인 앱 기능</div>
+        <ul>
+          <li>위젯 미리보기 (현재 설정 기반)</li>
+          <li>언어 선택 (한국어 / English)</li>
+          <li>갱신 주기 설정 (1시간 / 4시간 / 하루)</li>
+          <li>위젯 유형 (오늘의 명언 / 랜덤)</li>
+          <li>테마 선택 (5가지 컬러 테마)</li>
+          <li>토픽 필터링 (관심 토픽만 표시)</li>
+          <li>App Group으로 설정값 위젯과 공유</li>
+        </ul>
+      </div>
+
+      <div class="note-box" style="margin-top:16px">
+        <div class="note-title">탭 동작 요약</div>
+        <ul>
+          <li>Small: 위젯 전체 탭 → /quotes/{id}</li>
+          <li>Medium: 명언 영역 탭 → /quotes/{id}, 저자 탭 → /authors/{slug}</li>
+          <li>Large: 영역별 개별 탭 + Interactive 버튼</li>
+          <li>Lock Screen: 위젯 탭 → 앱 실행</li>
+          <li>Mac: 클릭 → Safari에서 사이트 열기</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
