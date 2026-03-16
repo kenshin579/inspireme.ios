@@ -29,17 +29,20 @@ struct RandomQuoteWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
 
     var body: some View {
-        switch family {
-        case .systemSmall:
-            SmallQuoteView(entry: entry)
-        case .systemMedium:
-            MediumQuoteView(entry: entry, showRefreshButton: true)
-        case .systemLarge:
-            LargeQuoteView(entry: entry, showRefreshButton: true, titleLabel: "랜덤 명언")
-        case .accessoryRectangular, .accessoryCircular, .accessoryInline:
-            LockScreenQuoteView(entry: entry)
-        default:
-            SmallQuoteView(entry: entry)
+        Group {
+            switch family {
+            case .systemSmall:
+                SmallQuoteView(entry: entry)
+            case .systemMedium:
+                MediumQuoteView(entry: entry, showRefreshButton: true)
+            case .systemLarge:
+                LargeQuoteView(entry: entry, showRefreshButton: true, titleLabel: "랜덤 명언")
+            case .accessoryRectangular, .accessoryCircular, .accessoryInline:
+                LockScreenQuoteView(entry: entry)
+            default:
+                SmallQuoteView(entry: entry)
+            }
         }
+        .preferredColorScheme(entry.preferredColorScheme)
     }
 }

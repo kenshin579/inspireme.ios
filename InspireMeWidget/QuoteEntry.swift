@@ -1,9 +1,19 @@
+import SwiftUI
 import WidgetKit
 
 struct QuoteEntry: TimelineEntry {
     let date: Date
     let quote: Quote
     let theme: WidgetTheme
+    let colorSchemeMode: String // "system" | "dark" | "light"
+
+    var preferredColorScheme: ColorScheme? {
+        switch colorSchemeMode {
+        case "dark": .dark
+        case "light": .light
+        default: nil // system
+        }
+    }
 
     static var placeholder: QuoteEntry {
         QuoteEntry(
@@ -17,7 +27,8 @@ struct QuoteEntry: TimelineEntry {
                 topics: ["motivation", "wisdom"],
                 tags: nil
             ),
-            theme: .gradient
+            theme: .gradient,
+            colorSchemeMode: "system"
         )
     }
 }

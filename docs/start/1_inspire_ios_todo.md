@@ -80,7 +80,7 @@
 - [x] `LargeQuoteView` — 명언 + 저자 + 토픽 태그 + 새로고침 버튼
 - [x] `LockScreenQuoteView` — Rectangular, Circular, Inline 3종
 - [x] 각 뷰에 테마 적용
-- [ ] 다크 모드 대응 (`@Environment(\.colorScheme)`)
+- [x] 다크 모드 대응 (`@Environment(\.colorScheme)`)
 
 ### Deep Link
 
