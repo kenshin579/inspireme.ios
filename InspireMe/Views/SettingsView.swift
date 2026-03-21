@@ -6,23 +6,10 @@ struct SettingsView: View {
     @State private var refreshInterval = AppGroupManager.refreshInterval
     @State private var widgetTheme = AppGroupManager.widgetTheme
     @State private var colorSchemeMode = AppGroupManager.colorSchemeMode
-    @State private var selectedTopics = Set(AppGroupManager.selectedTopics)
-
-    private let availableTopics = [
-        "motivation", "happiness", "love", "success",
-        "wisdom", "life", "friendship", "courage"
-    ]
-
-    private let topicDisplayNames: [String: String] = [
-        "motivation": "동기부여",
-        "happiness": "행복",
-        "love": "사랑",
-        "success": "성공",
-        "wisdom": "지혜",
-        "life": "삶",
-        "friendship": "우정",
-        "courage": "용기"
-    ]
+    @State private var selectedTopics = AppGroupManager.selectedTopics
+    @State private var newTopic = ""
+    @State private var suggestedTopics: [String] = []
+    @State private var searchTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -32,16 +19,10 @@ struct SettingsView: View {
                         Text("한국어").tag("ko")
                         Text("English").tag("en")
                     }
-                    .pickerStyle(.segmented)
                 }
 
                 Section("갱신 주기") {
-                    Picker("갱신 주기", selection: $refreshInterval) {
-                        Text("1시간").tag(1)
-                        Text("4시간").tag(4)
-                        Text("하루").tag(24)
-                    }
-                    .pickerStyle(.segmented)
+                    Stepper("\(refreshInterval)시간마다 갱신", value: $refreshInterval, in: 1...72)
                 }
 
                 Section("테마") {
@@ -73,24 +54,78 @@ struct SettingsView: View {
                         Text("다크").tag("dark")
                         Text("라이트").tag("light")
                     }
-                    .pickerStyle(.segmented)
                 }
 
                 Section("토픽 필터") {
-                    ForEach(availableTopics, id: \.self) { topic in
-                        Toggle(
-                            topicDisplayNames[topic] ?? topic,
-                            isOn: Binding(
-                                get: { selectedTopics.contains(topic) },
-                                set: { isOn in
-                                    if isOn {
-                                        selectedTopics.insert(topic)
+                    HStack {
+                        TextField("토픽 검색", text: $newTopic)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .onChange(of: newTopic) { _, newValue in
+                                searchTopics(query: newValue)
+                            }
+                        if !newTopic.isEmpty {
+                            Button {
+                                newTopic = ""
+                                suggestedTopics = []
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    if !suggestedTopics.isEmpty {
+                        ForEach(suggestedTopics, id: \.self) { topic in
+                            Button {
+                                selectTopic(topic)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "magnifyingglass")
+                                        .foregroundStyle(.secondary)
+                                        .font(.caption)
+                                    Text(topic)
+                                        .foregroundStyle(.primary)
+                                    Spacer()
+                                    if selectedTopics.contains(topic) {
+                                        Image(systemName: "checkmark")
+                                            .foregroundStyle(.purple)
+                                            .font(.caption)
                                     } else {
-                                        selectedTopics.remove(topic)
+                                        Image(systemName: "plus")
+                                            .foregroundStyle(.purple)
+                                            .font(.caption)
                                     }
                                 }
-                            )
-                        )
+                            }
+                        }
+                    }
+
+                    if suggestedTopics.isEmpty && newTopic.isEmpty {
+                        if selectedTopics.isEmpty {
+                            Text("토픽을 검색하여 추가하면 해당 토픽의 명언만 표시됩니다.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                if !selectedTopics.isEmpty {
+                    Section("선택된 토픽") {
+                        ForEach(selectedTopics, id: \.self) { topic in
+                            HStack {
+                                Text(topic)
+                                Spacer()
+                                Button {
+                                    selectedTopics.removeAll { $0 == topic }
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
                     }
                 }
             }
@@ -112,10 +147,37 @@ struct SettingsView: View {
                 reloadWidgets()
             }
             .onChange(of: selectedTopics) { _, newValue in
-                AppGroupManager.selectedTopics = Array(newValue)
+                AppGroupManager.selectedTopics = newValue
                 reloadWidgets()
             }
         }
+    }
+
+    private func searchTopics(query: String) {
+        searchTask?.cancel()
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else {
+            suggestedTopics = []
+            return
+        }
+
+        searchTask = Task {
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            let api = InspireMeAPI()
+            if let results = try? await api.searchTopics(query: trimmed, lang: language) {
+                guard !Task.isCancelled else { return }
+                suggestedTopics = results
+            }
+        }
+    }
+
+    private func selectTopic(_ topic: String) {
+        if !selectedTopics.contains(topic) {
+            selectedTopics.append(topic)
+        }
+        newTopic = ""
+        suggestedTopics = []
     }
 
     private func reloadWidgets() {

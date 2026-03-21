@@ -45,10 +45,14 @@ targets:
     sources:
       - path: InspireMeWidget
       - path: Shared
+    info:
+      path: InspireMeWidget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: pe.kr.advenoh.inspireme.widget
-        GENERATE_INFOPLIST_FILE: true
         INFOPLIST_KEY_CFBundleDisplayName: InspireMe Widget
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         CODE_SIGN_ENTITLEMENTS: InspireMeWidget/InspireMeWidget.entitlements
