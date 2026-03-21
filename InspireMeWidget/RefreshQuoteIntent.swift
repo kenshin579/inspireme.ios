@@ -6,7 +6,7 @@ struct RefreshQuoteIntent: AppIntent {
     static let description: IntentDescription = "새로운 명언을 불러옵니다"
 
     func perform() async throws -> some IntentResult {
-        WidgetCenter.shared.reloadTimelines(ofKind: "RandomQuoteWidget")
+        WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }
 }

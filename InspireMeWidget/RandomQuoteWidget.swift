@@ -11,6 +11,7 @@ struct RandomQuoteWidget: Widget {
                     entry.theme.backgroundGradient
                 }
         }
+        .contentMarginsDisabled()
         .configurationDisplayName("랜덤 명언")
         .description("설정한 주기마다 새로운 명언을 보여줍니다")
         .supportedFamilies([

@@ -2,13 +2,21 @@ import SwiftUI
 
 @main
 struct InspireMeApp: App {
+    @Environment(\.openURL) private var openURL
     @State private var widgetURL: URL?
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                    widgetURL = url
+                    if ProcessInfo.processInfo.isiOSAppOnMac {
+                        openURL(url)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                        }
+                    } else {
+                        widgetURL = url
+                    }
                 }
                 .fullScreenCover(item: $widgetURL) { url in
                     SafariView(url: url)

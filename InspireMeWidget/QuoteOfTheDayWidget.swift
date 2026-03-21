@@ -11,6 +11,7 @@ struct QuoteOfTheDayWidget: Widget {
                     entry.theme.backgroundGradient
                 }
         }
+        .contentMarginsDisabled()
         .configurationDisplayName("오늘의 명언")
         .description("매일 새로운 명언을 만나보세요")
         .supportedFamilies([

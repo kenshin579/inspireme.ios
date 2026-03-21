@@ -5,7 +5,7 @@ struct SmallQuoteView: View {
     let entry: QuoteEntry
 
     var body: some View {
-        Link(destination: URL(string: "\(InspireMeAPI.baseURL)/quotes/\(entry.quote.id)")!) {
+        Link(destination: entry.quoteURL) {
             SmallQuoteContent(quote: entry.quote, theme: entry.theme)
         }
     }

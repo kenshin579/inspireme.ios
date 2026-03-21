@@ -12,6 +12,11 @@ struct MainTabView: View {
                 .tabItem {
                     Label("설정", systemImage: "gearshape")
                 }
+
+            WebView()
+                .tabItem {
+                    Label("사이트", systemImage: "globe")
+                }
         }
     }
 }
