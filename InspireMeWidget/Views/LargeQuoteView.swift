@@ -34,7 +34,7 @@ struct LargeQuoteView: View {
                 .foregroundStyle(entry.theme.accentColor)
 
             // Quote content - tappable
-            Link(destination: URL(string: "\(InspireMeAPI.baseURL)/quotes/\(entry.quote.id)")!) {
+            Link(destination: entry.quoteURL) {
                 Text(entry.quote.content)
                     .font(.system(size: 18, weight: .medium))
                     .foregroundStyle(entry.theme.textColor)
@@ -45,7 +45,7 @@ struct LargeQuoteView: View {
             Spacer()
 
             // Author - tappable
-            Link(destination: URL(string: "\(InspireMeAPI.baseURL)/authors/\(entry.quote.authorSlug)")!) {
+            Link(destination: entry.authorURL) {
                 Text("— \(entry.quote.author)")
                     .font(.subheadline)
                     .foregroundStyle(entry.theme.secondaryTextColor)
@@ -68,7 +68,6 @@ struct LargeQuoteView: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(entry.theme.backgroundGradient)
     }
 }
 

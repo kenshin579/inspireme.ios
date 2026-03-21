@@ -9,7 +9,7 @@ struct MediumQuoteView: View {
         ZStack(alignment: .topTrailing) {
             HStack(spacing: 0) {
                 // Quote area - tappable to quote page
-                Link(destination: URL(string: "\(InspireMeAPI.baseURL)/quotes/\(entry.quote.id)")!) {
+                Link(destination: entry.quoteURL) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("\u{275D}")
                             .font(.title2)
@@ -33,7 +33,7 @@ struct MediumQuoteView: View {
                 VStack(alignment: .trailing) {
                     Spacer()
 
-                    Link(destination: URL(string: "\(InspireMeAPI.baseURL)/authors/\(entry.quote.authorSlug)")!) {
+                    Link(destination: entry.authorURL) {
                         Text("— \(entry.quote.author)")
                             .font(.caption)
                             .foregroundStyle(entry.theme.secondaryTextColor)
@@ -55,7 +55,6 @@ struct MediumQuoteView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(entry.theme.backgroundGradient)
     }
 }
 

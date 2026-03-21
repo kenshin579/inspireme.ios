@@ -15,6 +15,22 @@ struct QuoteEntry: TimelineEntry {
         }
     }
 
+    var quoteURL: URL {
+        if quote.id == "placeholder" {
+            URL(string: InspireMeAPI.baseURL)!
+        } else {
+            URL(string: "\(InspireMeAPI.baseURL)/quotes/\(quote.id)")!
+        }
+    }
+
+    var authorURL: URL {
+        if quote.authorSlug.isEmpty || quote.id == "placeholder" {
+            URL(string: InspireMeAPI.baseURL)!
+        } else {
+            URL(string: "\(InspireMeAPI.baseURL)/authors/\(quote.authorSlug)")!
+        }
+    }
+
     static var placeholder: QuoteEntry {
         QuoteEntry(
             date: .now,
