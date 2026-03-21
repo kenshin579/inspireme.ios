@@ -4,18 +4,18 @@
 
 - [x] Xcode 설치 확인 (`xcode-select -p`, `xcodebuild -version`)
 - [x] 미설치 시 App Store에서 Xcode 16+ 설치
-- [ ] iOS Simulator 확인 (iPhone, iPad 시뮬레이터 다운로드)
+- [x] iOS Simulator 확인 (iPhone, iPad 시뮬레이터 다운로드) — iOS 26.3 설치됨
 - [ ] Apple Developer 계정 확인 (Widget Extension + App Group 설정에 필요)
 
 ---
 
 ## Phase 1: 백엔드 API 수정
 
-- [ ] Widget API 응답 DTO에 `authorSlug` 필드 추가
-  - [ ] `/api/widget/random` 응답에 반영
-  - [ ] `/api/widget/quote-of-the-day` 응답에 반영
-- [ ] 백엔드 테스트 작성 및 확인
-- [ ] 배포
+- [x] Widget API 응답 DTO에 `authorSlug` 필드 추가 (이미 구현됨)
+  - [x] `/api/widget/random` 응답에 반영
+  - [x] `/api/widget/quote-of-the-day` 응답에 반영
+- [x] 백엔드 테스트 작성 및 확인
+- [x] 배포
 
 ---
 

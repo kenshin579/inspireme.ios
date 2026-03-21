@@ -17,3 +17,7 @@ struct QuoteResponse: Codable, Sendable {
 struct QuotesResponse: Codable, Sendable {
     let data: [Quote]
 }
+
+struct TopicsResponse: Codable, Sendable {
+    let data: [String]
+}
