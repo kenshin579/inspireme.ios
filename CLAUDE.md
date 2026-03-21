@@ -35,6 +35,18 @@ Shared/             # 앱 ↔ 위젯 공유 코드 (모델, API, 테마)
 project.yml         # XcodeGen 설정
 ```
 
+## 릴리스
+
+```bash
+# 버전 태그 + GitHub Release 생성
+make tag patch   # v1.0.0 → v1.0.1
+make tag minor   # v1.0.0 → v1.1.0
+make tag major   # v1.0.0 → v2.0.0
+
+# Release 아카이브 생성 (로컬)
+make archive
+```
+
 ## 주요 규칙
 
 - 새 소스 파일 추가 후 반드시 `xcodegen generate` 실행

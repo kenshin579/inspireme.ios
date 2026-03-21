@@ -12,6 +12,18 @@ settings:
     SWIFT_STRICT_CONCURRENCY: complete
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: 1
+    DEVELOPMENT_TEAM: 3PLL9LS3T3
+
+schemes:
+  InspireMe:
+    build:
+      targets:
+        InspireMe: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+      revealArchiveInOrganizer: true
 
 targets:
   InspireMe:

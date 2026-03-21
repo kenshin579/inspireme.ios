@@ -80,7 +80,48 @@ inspireme.ios/
         └── 1_inspire_ios_todo.md
 ```
 
-## 개발 환경
+## 설치 방법
+
+### 준비물
+
+- Mac (macOS 14 Sonoma 이상)
+- Xcode 16+ ([Mac App Store](https://apps.apple.com/app/xcode/id497799835)에서 무료 설치)
+- XcodeGen (`brew install xcodegen`)
+- Apple 계정 (무료 계정으로 충분)
+
+### Step 1. 소스 클론 및 프로젝트 생성
+
+```bash
+git clone https://github.com/kenshin579/inspireme.ios.git
+cd inspireme.ios
+xcodegen generate
+open InspireMe.xcodeproj
+```
+
+### Step 2. Xcode에서 서명 설정
+
+두 타겟 모두 본인 계정으로 변경해야 합니다.
+
+1. Xcode 좌측 패널에서 **InspireMe** 프로젝트 클릭
+2. **InspireMe** 타겟 선택 → **Signing & Capabilities** 탭
+   - **Team**: 본인 Apple ID 선택
+   - **Bundle Identifier**: 고유한 값으로 변경 (예: `com.yourname.inspireme`)
+3. **InspireMeWidgetExtension** 타겟도 동일하게 변경
+   - **Team**: 본인 Apple ID 선택
+   - **Bundle Identifier**: 메인 앱 하위로 변경 (예: `com.yourname.inspireme.widget`)
+
+### Step 3. 기기에 빌드 & 실행
+
+| 플랫폼 | 방법 |
+|--------|------|
+| **iPhone / iPad** | USB로 Mac에 연결 → Xcode 상단에서 기기 선택 → **Run** (Cmd+R) |
+| **Mac** (Apple Silicon) | Xcode 상단에서 **My Mac (Designed for iPad)** 선택 → **Run** (Cmd+R) |
+
+처음 실행 시 iPhone/iPad에서 **설정 → 일반 → VPN 및 기기 관리**에서 개발자 앱을 신뢰해야 합니다.
+
+> **참고**: 무료 Apple 계정은 7일마다 앱을 다시 빌드해야 합니다. Apple Developer Program ($99/year) 가입 시 이 제한이 없어집니다.
+
+## 개발 가이드
 
 ### 필수 요구사항
 
@@ -89,20 +130,32 @@ inspireme.ios/
 - XcodeGen (`brew install xcodegen`)
 - Apple Developer 계정 (App Group, WidgetKit Extension 설정에 필요)
 
-### 빌드 & 실행
+### Makefile 명령어
 
 ```bash
-# Xcode 프로젝트 생성 (새 파일 추가 후 필수)
-xcodegen generate
+make help        # 전체 명령어 목록
 
-# Xcode에서 열기
-open InspireMe.xcodeproj
+# 개발
+make generate    # XcodeGen으로 .xcodeproj 생성
+make build-sim   # iOS 시뮬레이터 빌드
+make build       # iOS 디바이스 빌드 (서명 없음)
+make open        # Xcode에서 프로젝트 열기
 
-# CLI 빌드 (iPhone 시뮬레이터)
-xcodebuild build -project InspireMe.xcodeproj -scheme InspireMe \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+# 릴리스
+make archive     # Release 아카이브 생성
+make tag patch   # 패치 버전 태그 + GitHub Release (v1.0.0 → v1.0.1)
+make tag minor   # 마이너 버전 태그 + GitHub Release (v1.0.0 → v1.1.0)
+make tag major   # 메이저 버전 태그 + GitHub Release (v1.0.0 → v2.0.0)
+make clean       # 빌드 결과물 삭제
+```
 
-# CLI 빌드 (Mac)
+### CLI 빌드
+
+```bash
+# iPhone 시뮬레이터
+make build-sim
+
+# Mac (Designed for iPad)
 xcodebuild build -project InspireMe.xcodeproj -scheme InspireMe \
   -destination 'platform=macOS,variant=Designed for iPad' -allowProvisioningUpdates
 ```
