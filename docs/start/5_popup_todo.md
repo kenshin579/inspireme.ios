@@ -63,14 +63,14 @@
 
 ## Phase 3: 알림 설정 UI
 
-- [ ] `InspireMe/Views/SettingsView.swift` 수정
-  - [ ] `@State notificationEnabled`, `@State notifyRandomQuote` 추가
-  - [ ] "알림" Section 추가 (갱신 주기 아래)
-    - [ ] "명언 변경 알림" Toggle
-    - [ ] "오늘의 명언" Toggle (항상 켜짐, disabled)
-    - [ ] "랜덤 명언" Toggle (선택)
-  - [ ] `onChange` 핸들러 추가 (AppGroupManager 저장 + 권한 요청)
-- [ ] 빌드 및 설정 UI 확인
+- [x] `InspireMe/Views/SettingsView.swift` 수정
+  - [x] `@State notificationEnabled`, `@State notifyRandomQuote` 추가
+  - [x] "알림" Section 추가 (갱신 주기 아래)
+    - [x] "명언 변경 알림" Toggle
+    - [x] "오늘의 명언" Toggle (항상 켜짐, disabled)
+    - [x] "랜덤 명언" Toggle (선택)
+  - [x] `onChange` 핸들러 추가 (AppGroupManager 저장 + 권한 요청)
+- [x] 빌드 및 설정 UI 확인
 
 ## Phase 4: 알림 딥링크 처리
 
