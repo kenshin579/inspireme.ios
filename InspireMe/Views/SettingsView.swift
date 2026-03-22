@@ -167,7 +167,13 @@ struct SettingsView: View {
             .onChange(of: notificationEnabled) { _, newValue in
                 AppGroupManager.notificationEnabled = newValue
                 if newValue {
-                    Task { await NotificationManager.shared.requestAuthorization() }
+                    Task {
+                        let granted = await NotificationManager.shared.requestAuthorization()
+                        if !granted {
+                            notificationEnabled = false
+                            AppGroupManager.notificationEnabled = false
+                        }
+                    }
                     BackgroundTaskManager.scheduleAppRefresh()
                 }
             }

@@ -7,12 +7,11 @@ struct InspireMeApp: App {
     @Environment(\.openURL) private var openURL
     @State private var widgetURL: URL?
 
-    private let notificationDelegate = NotificationDelegate()
+    private static let notificationDelegate = NotificationDelegate()
 
     init() {
         BackgroundTaskManager.registerTask()
-        let delegate = notificationDelegate
-        UNUserNotificationCenter.current().delegate = delegate
+        UNUserNotificationCenter.current().delegate = Self.notificationDelegate
     }
 
     var body: some Scene {
@@ -53,7 +52,8 @@ extension Notification.Name {
     static let didReceiveQuoteNotification = Notification.Name("didReceiveQuoteNotification")
 }
 
-class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+@MainActor
+final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
@@ -61,12 +61,10 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @uncheck
         if let urlString = response.notification.request.content
             .userInfo["quoteURL"] as? String,
            let url = URL(string: urlString) {
-            await MainActor.run {
-                NotificationCenter.default.post(
-                    name: .didReceiveQuoteNotification,
-                    object: url
-                )
-            }
+            NotificationCenter.default.post(
+                name: .didReceiveQuoteNotification,
+                object: url
+            )
         }
     }
 

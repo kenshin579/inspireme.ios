@@ -3,11 +3,13 @@ import UserNotifications
 actor NotificationManager {
     static let shared = NotificationManager()
 
+    @discardableResult
     func requestAuthorization() async -> Bool {
         do {
             return try await UNUserNotificationCenter.current()
                 .requestAuthorization(options: [.alert, .sound, .badge])
         } catch {
+            print("[NotificationManager] Authorization request failed: \(error)")
             return false
         }
     }
@@ -36,7 +38,11 @@ actor NotificationManager {
             trigger: nil
         )
 
-        try? await UNUserNotificationCenter.current().add(request)
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+        } catch {
+            print("[NotificationManager] Failed to schedule notification: \(error)")
+        }
     }
 
     func removeAllPending() {
