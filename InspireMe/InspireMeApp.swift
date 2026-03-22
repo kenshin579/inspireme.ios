@@ -52,23 +52,24 @@ extension Notification.Name {
     static let didReceiveQuoteNotification = Notification.Name("didReceiveQuoteNotification")
 }
 
-@MainActor
-final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
-    func userNotificationCenter(
+final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+    nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
         if let urlString = response.notification.request.content
             .userInfo["quoteURL"] as? String,
            let url = URL(string: urlString) {
-            NotificationCenter.default.post(
-                name: .didReceiveQuoteNotification,
-                object: url
-            )
+            await MainActor.run {
+                NotificationCenter.default.post(
+                    name: .didReceiveQuoteNotification,
+                    object: url
+                )
+            }
         }
     }
 
-    func userNotificationCenter(
+    nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
