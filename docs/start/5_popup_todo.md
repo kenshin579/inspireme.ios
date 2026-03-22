@@ -74,10 +74,10 @@
 
 ## Phase 4: 알림 딥링크 처리
 
-- [ ] 알림 탭 → SafariView로 명언 페이지 열기 확인
-  - [ ] `NotificationDelegate.didReceive` → `widgetURL` 연동
-  - [ ] iOS에서 알림 탭 → SafariView fullScreenCover 동작 확인
-  - [ ] macOS에서 알림 탭 → 브라우저 열기 동작 확인
+- [x] 알림 탭 → SafariView로 명언 페이지 열기 확인
+  - [x] `NotificationDelegate.didReceive` → `widgetURL` 연동
+  - [ ] iOS에서 알림 탭 → SafariView fullScreenCover 동작 확인 (실기기 테스트 필요)
+  - [ ] macOS에서 알림 탭 → 브라우저 열기 동작 확인 (실기기 테스트 필요)
 
 ## Phase 5: 테스트
 
