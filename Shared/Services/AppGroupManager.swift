@@ -16,6 +16,8 @@ struct AppGroupManager: Sendable {
         static let selectedTopics = "selectedTopics"
         static let colorSchemeMode = "colorSchemeMode"
         static let cachedQuote = "cachedQuote"
+        static let notificationEnabled = "notificationEnabled"
+        static let notifyRandomQuote = "notifyRandomQuote"
     }
 
     // MARK: - Language
@@ -60,6 +62,21 @@ struct AppGroupManager: Sendable {
     static var colorSchemeMode: String {
         get { defaults?.string(forKey: Keys.colorSchemeMode) ?? "system" }
         set { defaults?.set(newValue, forKey: Keys.colorSchemeMode) }
+    }
+
+    // MARK: - Notification Settings
+
+    static var notificationEnabled: Bool {
+        get {
+            guard let value = defaults?.object(forKey: Keys.notificationEnabled) else { return true }
+            return value as? Bool ?? true
+        }
+        set { defaults?.set(newValue, forKey: Keys.notificationEnabled) }
+    }
+
+    static var notifyRandomQuote: Bool {
+        get { defaults?.bool(forKey: Keys.notifyRandomQuote) ?? false }
+        set { defaults?.set(newValue, forKey: Keys.notifyRandomQuote) }
     }
 
     // MARK: - Cached Quote

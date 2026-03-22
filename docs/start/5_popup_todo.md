@@ -16,50 +16,50 @@
 
 ### 2-1. 프로젝트 설정
 
-- [ ] `project.yml` 수정
-  - [ ] InspireMe 타겟에 `Background Modes` capability 추가 (`fetch`)
-  - [ ] Info.plist에 `BGTaskSchedulerPermittedIdentifiers` 추가 (`pe.kr.advenoh.inspireme.quote-refresh`)
-- [ ] `xcodegen generate` 실행
+- [x] `project.yml` 수정
+  - [x] InspireMe 타겟에 `Background Modes` capability 추가 (`fetch`)
+  - [x] Info.plist에 `BGTaskSchedulerPermittedIdentifiers` 추가 (`pe.kr.advenoh.inspireme.quote-refresh`)
+- [x] `xcodegen generate` 실행
 
 ### 2-2. AppGroupManager 확장
 
-- [ ] `Shared/Services/AppGroupManager.swift` 수정
-  - [ ] `Keys` enum에 `notificationEnabled`, `notifyRandomQuote` 추가
-  - [ ] `notificationEnabled` computed property 추가 (기본값: true)
-  - [ ] `notifyRandomQuote` computed property 추가 (기본값: false)
+- [x] `Shared/Services/AppGroupManager.swift` 수정
+  - [x] `Keys` enum에 `notificationEnabled`, `notifyRandomQuote` 추가
+  - [x] `notificationEnabled` computed property 추가 (기본값: true)
+  - [x] `notifyRandomQuote` computed property 추가 (기본값: false)
 
 ### 2-3. NotificationManager 구현
 
-- [ ] `Shared/Services/NotificationManager.swift` 생성
-  - [ ] `requestAuthorization()` — 알림 권한 요청
-  - [ ] `isAuthorized()` — 권한 상태 확인
-  - [ ] `scheduleQuoteNotification(quote:)` — Local Notification 발송
-  - [ ] `removeAllPending()` — 대기 알림 제거
-  - [ ] 알림 content에 quoteURL userInfo 포함 (Deep Link용)
-  - [ ] 다국어 알림 제목 처리 (ko/en)
+- [x] `Shared/Services/NotificationManager.swift` 생성
+  - [x] `requestAuthorization()` — 알림 권한 요청
+  - [x] `isAuthorized()` — 권한 상태 확인
+  - [x] `scheduleQuoteNotification(quote:)` — Local Notification 발송
+  - [x] `removeAllPending()` — 대기 알림 제거
+  - [x] 알림 content에 quoteURL userInfo 포함 (Deep Link용)
+  - [x] 다국어 알림 제목 처리 (ko/en)
 
 ### 2-4. BackgroundTaskManager 구현
 
-- [ ] `InspireMe/Services/` 디렉토리 생성
-- [ ] `InspireMe/Services/BackgroundTaskManager.swift` 생성
-  - [ ] `registerTask()` — BGAppRefreshTask 등록
-  - [ ] `scheduleAppRefresh()` — 다음 실행 예약
-  - [ ] `handleAppRefresh(task:)` — API fetch → 캐시 비교 → 알림 발송
-  - [ ] `expirationHandler`에서 Task 취소 처리
+- [x] `InspireMe/Services/` 디렉토리 생성
+- [x] `InspireMe/Services/BackgroundTaskManager.swift` 생성
+  - [x] `registerTask()` — BGAppRefreshTask 등록
+  - [x] `scheduleAppRefresh()` — 다음 실행 예약
+  - [x] `handleAppRefresh(task:)` — API fetch → 캐시 비교 → 알림 발송
+  - [x] `expirationHandler`에서 Task 취소 처리
 
 ### 2-5. 앱 진입점 수정
 
-- [ ] `InspireMe/InspireMeApp.swift` 수정
-  - [ ] `import BackgroundTasks` 추가
-  - [ ] `init()`에서 `BackgroundTaskManager.registerTask()` 호출
-  - [ ] `.task`에서 알림 권한 요청 + 백그라운드 스케줄링
-  - [ ] `NotificationDelegate` 클래스 구현
-    - [ ] `didReceive response` — 알림 탭 시 Deep Link 처리 (quoteURL → widgetURL)
-    - [ ] `willPresent notification` — Foreground에서도 배너 표시
-  - [ ] `UNUserNotificationCenter.current().delegate` 설정
+- [x] `InspireMe/InspireMeApp.swift` 수정
+  - [x] `import BackgroundTasks` 추가
+  - [x] `init()`에서 `BackgroundTaskManager.registerTask()` 호출
+  - [x] `.task`에서 알림 권한 요청 + 백그라운드 스케줄링
+  - [x] `NotificationDelegate` 클래스 구현
+    - [x] `didReceive response` — 알림 탭 시 Deep Link 처리 (quoteURL → widgetURL)
+    - [x] `willPresent notification` — Foreground에서도 배너 표시
+  - [x] `UNUserNotificationCenter.current().delegate` 설정
 
-- [ ] `xcodegen generate` 실행
-- [ ] 빌드 확인
+- [x] `xcodegen generate` 실행
+- [x] 빌드 확인
 
 ## Phase 3: 알림 설정 UI
 
