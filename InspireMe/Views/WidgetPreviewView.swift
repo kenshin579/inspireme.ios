@@ -1,7 +1,9 @@
 import SwiftUI
+import WidgetKit
 
 struct WidgetPreviewView: View {
     private let theme = AppGroupManager.widgetTheme
+    @State private var showToast = false
 
     private let sampleQuote = Quote(
         id: "sample",
@@ -54,7 +56,22 @@ struct WidgetPreviewView: View {
                 .padding()
             }
             .navigationTitle("위젯 미리보기")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        reloadWidgets()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+            }
         }
+        .toast(message: "새로운 명언이 위젯에 표시되고 있습니다", isPresented: $showToast)
+    }
+
+    private func reloadWidgets() {
+        WidgetCenter.shared.reloadAllTimelines()
+        withAnimation { showToast = true }
     }
 }
 

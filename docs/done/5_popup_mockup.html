@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InspireMe 알림/토스트 UI 목업</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #1a1a2e;
+    color: #fff;
+    padding: 40px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  h1 span { color: #a78bfa; }
+
+  .subtitle {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 14px;
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .badge {
+    font-size: 11px;
+    background: #a78bfa33;
+    color: #a78bfa;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .platform-section {
+    margin-bottom: 56px;
+  }
+
+  .demo-row {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .demo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .demo-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  /* ─── iPhone Frame ─── */
+  .iphone-frame {
+    width: 320px;
+    height: 640px;
+    background: #000;
+    border-radius: 40px;
+    border: 3px solid #333;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .iphone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    z-index: 20;
+  }
+
+  .iphone-dynamic-island {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 24px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    z-index: 21;
+  }
+
+  .iphone-status-bar {
+    position: absolute;
+    top: 8px;
+    left: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 10;
+    color: #fff;
+  }
+
+  .iphone-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 37px;
+    overflow: hidden;
+  }
+
+  .iphone-home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: #fff;
+    border-radius: 2px;
+    opacity: 0.3;
+    z-index: 20;
+  }
+
+  /* ─── Lock Screen ─── */
+  .lock-screen {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #1e3a5f, #0f1b2d, #1a0a2e);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 56px;
+  }
+
+  .lock-time {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 2px;
+  }
+
+  .lock-date {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 24px;
+  }
+
+  /* ─── iOS Notification Banner ─── */
+  .notification-banner {
+    width: 280px;
+    background: rgba(45, 45, 50, 0.92);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: slideDown 0.5s ease-out;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .notification-banner:hover {
+    transform: scale(1.02);
+  }
+
+  .notification-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .notification-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+  }
+
+  .notification-app-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+
+  .notification-time {
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  .notification-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .notification-body {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── macOS Notification ─── */
+  .macos-frame {
+    width: 480px;
+    height: 300px;
+    background: linear-gradient(135deg, #2d1b69, #1a1a2e);
+    border-radius: 12px;
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+
+  .macos-menubar {
+    height: 24px;
+    background: rgba(30, 30, 35, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #e2e8f0;
+  }
+
+  .macos-menubar-right {
+    display: flex;
+    gap: 12px;
+    color: #94a3b8;
+    font-size: 11px;
+  }
+
+  .macos-notification {
+    position: absolute;
+    top: 32px;
+    right: 12px;
+    width: 300px;
+    background: rgba(45, 45, 50, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: macSlideIn 0.4s ease-out;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .macos-notification:hover {
+    transform: scale(1.02);
+  }
+
+  .macos-notification .notification-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    border-radius: 7px;
+  }
+
+  @keyframes macSlideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .macos-desktop-widgets {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .macos-mini-widget {
+    width: 140px;
+    height: 60px;
+    background: linear-gradient(135deg, #7c3aed33, #a78bfa22);
+    border: 1px solid #a78bfa33;
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .macos-mini-widget .mini-quote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 9px;
+    color: #e2e8f0;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .macos-mini-widget .mini-author {
+    font-size: 8px;
+    color: #a78bfa;
+    text-align: right;
+  }
+
+  /* ─── App Screen (Settings) ─── */
+  .app-screen {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-nav-bar {
+    padding: 48px 16px 12px;
+    text-align: center;
+  }
+
+  .app-nav-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .app-form {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+  }
+
+  .form-section {
+    margin-bottom: 16px;
+  }
+
+  .form-section-header {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 0;
+    font-weight: 500;
+  }
+
+  .form-group {
+    background: #1c1c1e;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-bottom: 1px solid #2c2c2e;
+    font-size: 14px;
+  }
+
+  .form-row:last-child {
+    border-bottom: none;
+  }
+
+  .form-row-label {
+    color: #fff;
+  }
+
+  .form-row-value {
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  /* Toggle Switch */
+  .toggle {
+    width: 42px;
+    height: 26px;
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .toggle.on {
+    background: #34c759;
+  }
+
+  .toggle.off {
+    background: #3a3a3c;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    top: 2px;
+    transition: left 0.2s;
+  }
+
+  .toggle.on::after {
+    left: 18px;
+  }
+
+  .toggle.off::after {
+    left: 2px;
+  }
+
+  .new-badge {
+    display: inline-block;
+    font-size: 9px;
+    background: #ef4444;
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ─── In-App Toast ─── */
+  .toast-overlay {
+    position: absolute;
+    top: 54px;
+    left: 16px;
+    right: 16px;
+    z-index: 30;
+  }
+
+  .toast-banner {
+    background: rgba(52, 199, 89, 0.92);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toastSlide 0.4s ease-out;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  .toast-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .toast-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    flex: 1;
+  }
+
+  .toast-dismiss {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+  }
+
+  @keyframes toastSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Preview Tab with Toast ─── */
+  .preview-screen {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .preview-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 56px 20px 20px;
+    gap: 16px;
+  }
+
+  .preview-nav-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .preview-widget {
+    width: 260px;
+    height: 140px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7, #c084fc);
+    border-radius: 20px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+  }
+
+  .preview-widget .quote-mark {
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  .preview-widget .quote-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    color: #fff;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .preview-widget .quote-author {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    text-align: right;
+  }
+
+  .preview-widget-label {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  /* ─── Tab Bar ─── */
+  .tab-bar {
+    height: 56px;
+    background: rgba(28, 28, 30, 0.95);
+    border-top: 1px solid #2c2c2e;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 20px;
+  }
+
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  .tab-item.active {
+    color: #a78bfa;
+  }
+
+  .tab-item .tab-icon {
+    font-size: 18px;
+  }
+
+  /* ─── Flow Diagram ─── */
+  .flow-section {
+    margin-bottom: 56px;
+  }
+
+  .flow-diagram {
+    background: rgba(30, 30, 50, 0.6);
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .flow-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #a78bfa;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    background: rgba(167, 139, 250, 0.15);
+    border: 1px solid #a78bfa44;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #e2e8f0;
+    text-align: center;
+    min-width: 100px;
+  }
+
+  .flow-arrow {
+    font-size: 16px;
+    color: #a78bfa;
+  }
+
+  .flow-step.highlight {
+    background: rgba(52, 199, 89, 0.2);
+    border-color: #34c75966;
+  }
+
+  /* ─── Comparison ─── */
+  .comparison {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .comparison-col {
+    text-align: center;
+  }
+
+  .comparison-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .comparison-label.before {
+    background: #3a3a3c;
+    color: #94a3b8;
+  }
+
+  .comparison-label.after {
+    background: #34c75933;
+    color: #34c759;
+  }
+
+  /* ─── Interactive Demo ─── */
+  .demo-controls {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .demo-btn {
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+    margin: 0 8px;
+  }
+
+  .demo-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+  }
+
+  .demo-btn:active {
+    transform: translateY(0);
+  }
+
+  .demo-btn.secondary {
+    background: #2c2c2e;
+  }
+
+  /* ─── Animations ─── */
+  .animated { transition: all 0.4s ease; }
+
+  .hidden { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+  .visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+  .notification-hidden { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+  .notification-visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+  .mac-notification-hidden { opacity: 0; transform: translateX(20px); pointer-events: none; }
+  .mac-notification-visible { opacity: 1; transform: translateX(0); pointer-events: all; }
+</style>
+</head>
+<body>
+
+<h1>InspireMe <span>알림/토스트</span> UI 목업</h1>
+<p class="subtitle">명언 변경 시 알림 기능 — iOS / macOS</p>
+
+<!-- ─── Interactive Demo Controls ─── -->
+<div class="demo-controls">
+  <button class="demo-btn" onclick="triggerAllNotifications()">명언 변경 알림 시뮬레이션</button>
+  <button class="demo-btn secondary" onclick="resetAll()">초기화</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- Section 1: iOS Notifications -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="platform-section">
+  <div class="section-title">
+    1. iOS 알림 (Lock Screen & Banner)
+    <span class="badge">Local Notification</span>
+  </div>
+
+  <div class="demo-row">
+    <!-- Lock Screen Notification -->
+    <div class="demo-wrapper">
+      <div class="demo-label">잠금 화면 알림</div>
+      <div class="iphone-frame">
+        <div class="iphone-dynamic-island"></div>
+        <div class="iphone-status-bar">
+          <span>9:41</span>
+          <span></span>
+        </div>
+        <div class="iphone-screen">
+          <div class="lock-screen">
+            <div class="lock-time">9:41</div>
+            <div class="lock-date">3월 22일 토요일</div>
+
+            <!-- Notification -->
+            <div class="notification-banner animated notification-hidden" id="lock-notification">
+              <div class="notification-icon">💡</div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <span class="notification-app-name">InspireMe</span>
+                  <span class="notification-time">지금</span>
+                </div>
+                <div class="notification-title">오늘의 명언이 도착했습니다</div>
+                <div class="notification-body">"삶이 있는 한 희망은 있다." — 키케로</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="iphone-home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- Banner Notification (in-app) -->
+    <div class="demo-wrapper">
+      <div class="demo-label">배너 알림 (앱 외부)</div>
+      <div class="iphone-frame">
+        <div class="iphone-dynamic-island"></div>
+        <div class="iphone-status-bar">
+          <span>9:41</span>
+          <span></span>
+        </div>
+        <div class="iphone-screen">
+          <div style="width:100%;height:100%;background:linear-gradient(160deg,#2d1b69,#1a1a2e);display:flex;flex-direction:column;align-items:center;padding-top:48px;">
+            <!-- Banner at top -->
+            <div class="notification-banner animated notification-hidden" id="banner-notification" style="position:absolute;top:36px;z-index:30;width:280px;">
+              <div class="notification-icon">💡</div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <span class="notification-app-name">InspireMe</span>
+                  <span class="notification-time">지금</span>
+                </div>
+                <div class="notification-title">오늘의 명언이 도착했습니다</div>
+                <div class="notification-body">"삶이 있는 한 희망은 있다." — 키케로</div>
+              </div>
+            </div>
+
+            <!-- Home screen mockup -->
+            <div style="margin-top:40px;display:flex;flex-wrap:wrap;gap:16px;padding:0 24px;justify-content:center;">
+              <div style="width:52px;height:52px;background:#2c2c2e;border-radius:12px;"></div>
+              <div style="width:52px;height:52px;background:#2c2c2e;border-radius:12px;"></div>
+              <div style="width:52px;height:52px;background:#2c2c2e;border-radius:12px;"></div>
+              <div style="width:52px;height:52px;background:#2c2c2e;border-radius:12px;"></div>
+              <div style="width:52px;height:52px;background:#1e5e3a;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">📱</div>
+              <div style="width:52px;height:52px;background:#1e3a5f;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">🌐</div>
+              <div style="width:52px;height:52px;background:#5f1e3a;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">🎵</div>
+              <div style="width:52px;height:52px;background:#3a5f1e;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">📷</div>
+            </div>
+
+            <!-- Widget on home screen -->
+            <div style="margin-top:24px;width:260px;height:110px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;">
+              <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">❝</div>
+              <div style="font-family:'Noto Serif KR',serif;font-size:12px;color:#fff;line-height:1.5;margin-bottom:6px;">삶이 있는 한 희망은 있다.</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.7);text-align:right;">— 키케로</div>
+            </div>
+          </div>
+        </div>
+        <div class="iphone-home-indicator"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- Section 2: In-App Toast -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="platform-section">
+  <div class="section-title">
+    2. In-App 토스트
+    <span class="badge">앱 사용 중</span>
+  </div>
+
+  <div class="demo-row">
+    <!-- Preview Tab with Toast -->
+    <div class="demo-wrapper">
+      <div class="demo-label">미리보기 탭 — 토스트 알림</div>
+      <div class="iphone-frame">
+        <div class="iphone-dynamic-island"></div>
+        <div class="iphone-status-bar">
+          <span>9:41</span>
+          <span></span>
+        </div>
+        <div class="iphone-screen">
+          <div class="preview-screen">
+            <!-- Toast -->
+            <div class="toast-overlay animated hidden" id="preview-toast">
+              <div class="toast-banner">
+                <span class="toast-icon">✨</span>
+                <span class="toast-text">새로운 명언이 위젯에 표시되고 있습니다</span>
+                <span class="toast-dismiss">✕</span>
+              </div>
+            </div>
+
+            <div class="preview-content">
+              <div class="preview-nav-title">미리보기</div>
+
+              <div class="preview-widget">
+                <div class="quote-mark">❝</div>
+                <div class="quote-text">삶이 있는 한 희망은 있다.</div>
+                <div class="quote-author">— 키케로</div>
+              </div>
+              <div class="preview-widget-label">Medium 위젯</div>
+
+              <div style="width:130px;height:130px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:center;margin-top:8px;">
+                <div style="font-family:'Noto Serif KR',serif;font-size:11px;color:#fff;line-height:1.5;margin-bottom:6px;">삶이 있는 한 희망은 있다.</div>
+                <div style="font-size:9px;color:rgba(255,255,255,0.7);text-align:right;">— 키케로</div>
+              </div>
+              <div class="preview-widget-label">Small 위젯</div>
+            </div>
+
+            <div class="tab-bar">
+              <div class="tab-item active">
+                <span class="tab-icon">🔲</span>
+                <span>미리보기</span>
+              </div>
+              <div class="tab-item">
+                <span class="tab-icon">⚙️</span>
+                <span>설정</span>
+              </div>
+              <div class="tab-item">
+                <span class="tab-icon">🌐</span>
+                <span>사이트</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="iphone-home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- Settings Tab (NEW section) -->
+    <div class="demo-wrapper">
+      <div class="demo-label">설정 탭 — 알림 설정 (신규)</div>
+      <div class="iphone-frame">
+        <div class="iphone-dynamic-island"></div>
+        <div class="iphone-status-bar">
+          <span>9:41</span>
+          <span></span>
+        </div>
+        <div class="iphone-screen">
+          <div class="app-screen">
+            <div class="app-nav-bar">
+              <div class="app-nav-title">설정</div>
+            </div>
+
+            <div class="app-form">
+              <!-- Existing: Language -->
+              <div class="form-section">
+                <div class="form-section-header">언어</div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label">언어</span>
+                    <span class="form-row-value">한국어 ›</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Existing: Refresh Interval -->
+              <div class="form-section">
+                <div class="form-section-header">갱신 주기</div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label">4시간마다 갱신</span>
+                    <span class="form-row-value">◀ ▶</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- NEW: Notification Settings -->
+              <div class="form-section" style="border: 1px solid #34c75944; border-radius: 14px; padding: 2px;">
+                <div class="form-section-header" style="padding-left: 10px;">
+                  알림 <span class="new-badge">NEW</span>
+                </div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label">명언 변경 알림</span>
+                    <div class="toggle on"></div>
+                  </div>
+                  <div class="form-row">
+                    <span class="form-row-label">오늘의 명언</span>
+                    <div class="toggle on"></div>
+                  </div>
+                  <div class="form-row">
+                    <span class="form-row-label">랜덤 명언</span>
+                    <div class="toggle off"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Existing: Theme (collapsed) -->
+              <div class="form-section">
+                <div class="form-section-header">테마</div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label">Gradient</span>
+                    <span style="color:#a78bfa;">✓</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Existing: Dark Mode -->
+              <div class="form-section">
+                <div class="form-section-header">다크 모드</div>
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label">다크 모드</span>
+                    <span class="form-row-value">시스템 ›</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-bar">
+              <div class="tab-item">
+                <span class="tab-icon">🔲</span>
+                <span>미리보기</span>
+              </div>
+              <div class="tab-item active">
+                <span class="tab-icon">⚙️</span>
+                <span>설정</span>
+              </div>
+              <div class="tab-item">
+                <span class="tab-icon">🌐</span>
+                <span>사이트</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="iphone-home-indicator"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- Section 3: macOS Notification -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="platform-section">
+  <div class="section-title">
+    3. macOS 알림
+    <span class="badge">데스크탑</span>
+  </div>
+
+  <div class="demo-row">
+    <div class="demo-wrapper">
+      <div class="demo-label">macOS 데스크탑 알림 배너</div>
+      <div class="macos-frame">
+        <div class="macos-menubar">
+          <span> InspireMe</span>
+          <div class="macos-menubar-right">
+            <span>Wi-Fi</span>
+            <span>100%</span>
+            <span>토 3월 22일 9:41</span>
+          </div>
+        </div>
+
+        <!-- macOS Notification -->
+        <div class="macos-notification animated mac-notification-hidden" id="mac-notification">
+          <div class="notification-icon">💡</div>
+          <div class="notification-content">
+            <div class="notification-header">
+              <span class="notification-app-name">InspireMe</span>
+              <span class="notification-time">지금</span>
+            </div>
+            <div class="notification-title">오늘의 명언이 도착했습니다</div>
+            <div class="notification-body">"삶이 있는 한 희망은 있다." — 키케로</div>
+          </div>
+        </div>
+
+        <!-- Desktop Widgets -->
+        <div class="macos-desktop-widgets">
+          <div class="macos-mini-widget">
+            <div class="mini-quote">삶이 있는 한 희망은 있다.</div>
+            <div class="mini-author">— 키케로</div>
+          </div>
+          <div class="macos-mini-widget">
+            <div class="mini-quote">시작이 반이다.</div>
+            <div class="mini-author">— 아리스토텔레스</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- Section 4: Flow Diagram -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="section-title">
+    4. 동작 흐름
+  </div>
+
+  <!-- Flow A: Background Notification -->
+  <div class="flow-diagram" style="margin-bottom: 20px;">
+    <div class="flow-title">방안 A — Local Notification (백그라운드)</div>
+    <div class="flow-steps">
+      <div class="flow-step">BGAppRefreshTask<br><small style="color:#64748b;">시스템이 실행</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">API Fetch<br><small style="color:#64748b;">새 명언 가져오기</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">캐시 비교<br><small style="color:#64748b;">변경 여부 확인</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">Local Notification<br><small style="color:#34c759;">알림 발송</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">알림 탭<br><small style="color:#64748b;">Deep Link</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">SafariView<br><small style="color:#34c759;">명언 페이지</small></div>
+    </div>
+  </div>
+
+  <!-- Flow C: In-App Toast -->
+  <div class="flow-diagram">
+    <div class="flow-title">방안 C — In-App Toast (앱 사용 중)</div>
+    <div class="flow-steps">
+      <div class="flow-step">설정 변경<br><small style="color:#64748b;">또는 위젯 갱신</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">reloadTimelines<br><small style="color:#64748b;">위젯 새로고침</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">Toast 표시<br><small style="color:#34c759;">3초 후 사라짐</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- Section 5: Notification Content Variants -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="platform-section">
+  <div class="section-title">
+    5. 알림 내용 변형
+  </div>
+
+  <div class="demo-row" style="gap: 20px;">
+    <!-- Quote of the Day -->
+    <div class="demo-wrapper">
+      <div class="demo-label">오늘의 명언 (기본)</div>
+      <div class="notification-banner" style="animation: none;">
+        <div class="notification-icon">💡</div>
+        <div class="notification-content">
+          <div class="notification-header">
+            <span class="notification-app-name">InspireMe</span>
+            <span class="notification-time">오전 8:00</span>
+          </div>
+          <div class="notification-title">오늘의 명언이 도착했습니다</div>
+          <div class="notification-body">"삶이 있는 한 희망은 있다." — 키케로</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Random Quote -->
+    <div class="demo-wrapper">
+      <div class="demo-label">랜덤 명언 (선택)</div>
+      <div class="notification-banner" style="animation: none;">
+        <div class="notification-icon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">🎲</div>
+        <div class="notification-content">
+          <div class="notification-header">
+            <span class="notification-app-name">InspireMe</span>
+            <span class="notification-time">오후 2:30</span>
+          </div>
+          <div class="notification-title">새로운 명언을 확인해보세요</div>
+          <div class="notification-body">"시작이 반이다." — 아리스토텔레스</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- English -->
+    <div class="demo-wrapper">
+      <div class="demo-label">영어 명언</div>
+      <div class="notification-banner" style="animation: none;">
+        <div class="notification-icon">💡</div>
+        <div class="notification-content">
+          <div class="notification-header">
+            <span class="notification-app-name">InspireMe</span>
+            <span class="notification-time">8:00 AM</span>
+          </div>
+          <div class="notification-title">Today's quote has arrived</div>
+          <div class="notification-body">"While there's life, there's hope." — Cicero</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerAllNotifications() {
+    // Lock screen notification
+    const lockNotif = document.getElementById('lock-notification');
+    lockNotif.classList.remove('notification-hidden');
+    lockNotif.classList.add('notification-visible');
+
+    // Banner notification (slight delay)
+    setTimeout(() => {
+      const bannerNotif = document.getElementById('banner-notification');
+      bannerNotif.classList.remove('notification-hidden');
+      bannerNotif.classList.add('notification-visible');
+    }, 300);
+
+    // In-app toast
+    setTimeout(() => {
+      const toast = document.getElementById('preview-toast');
+      toast.classList.remove('hidden');
+      toast.classList.add('visible');
+    }, 600);
+
+    // macOS notification
+    setTimeout(() => {
+      const macNotif = document.getElementById('mac-notification');
+      macNotif.classList.remove('mac-notification-hidden');
+      macNotif.classList.add('mac-notification-visible');
+    }, 900);
+  }
+
+  function resetAll() {
+    const lockNotif = document.getElementById('lock-notification');
+    lockNotif.classList.add('notification-hidden');
+    lockNotif.classList.remove('notification-visible');
+
+    const bannerNotif = document.getElementById('banner-notification');
+    bannerNotif.classList.add('notification-hidden');
+    bannerNotif.classList.remove('notification-visible');
+
+    const toast = document.getElementById('preview-toast');
+    toast.classList.add('hidden');
+    toast.classList.remove('visible');
+
+    const macNotif = document.getElementById('mac-notification');
+    macNotif.classList.add('mac-notification-hidden');
+    macNotif.classList.remove('mac-notification-visible');
+  }
+</script>
+
+</body>
+</html>

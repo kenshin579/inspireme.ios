@@ -10,6 +10,8 @@ struct SettingsView: View {
     @State private var newTopic = ""
     @State private var suggestedTopics: [String] = []
     @State private var searchTask: Task<Void, Never>?
+    @State private var notificationEnabled = AppGroupManager.notificationEnabled
+    @State private var notifyRandomQuote = AppGroupManager.notifyRandomQuote
 
     var body: some View {
         NavigationStack {
@@ -23,6 +25,18 @@ struct SettingsView: View {
 
                 Section("갱신 주기") {
                     Stepper("\(refreshInterval)시간마다 갱신", value: $refreshInterval, in: 1...72)
+                }
+
+                Section("알림") {
+                    Toggle("명언 변경 알림", isOn: $notificationEnabled)
+
+                    if notificationEnabled {
+                        Toggle("오늘의 명언", isOn: .constant(true))
+                            .disabled(true)
+                            .foregroundStyle(.secondary)
+
+                        Toggle("랜덤 명언", isOn: $notifyRandomQuote)
+                    }
                 }
 
                 Section("테마") {
@@ -149,6 +163,22 @@ struct SettingsView: View {
             .onChange(of: selectedTopics) { _, newValue in
                 AppGroupManager.selectedTopics = newValue
                 reloadWidgets()
+            }
+            .onChange(of: notificationEnabled) { _, newValue in
+                AppGroupManager.notificationEnabled = newValue
+                if newValue {
+                    Task {
+                        let granted = await NotificationManager.shared.requestAuthorization()
+                        if !granted {
+                            notificationEnabled = false
+                            AppGroupManager.notificationEnabled = false
+                        }
+                    }
+                    BackgroundTaskManager.scheduleAppRefresh()
+                }
+            }
+            .onChange(of: notifyRandomQuote) { _, newValue in
+                AppGroupManager.notifyRandomQuote = newValue
             }
         }
     }
